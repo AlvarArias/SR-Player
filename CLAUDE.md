@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-iOS SwiftUI radio player for Sveriges Radio (SR), built with Firebase Auth and Google Sign-In.
+iOS SwiftUI podcast player for Sveriges Radio (SR) — live radio streaming was removed (SR API terms, condition 2), built with Firebase Auth and Google Sign-In.
 
 - **iOS**: 26.0+
 - **Swift**: 6.0
@@ -20,6 +20,10 @@ iOS SwiftUI radio player for Sveriges Radio (SR), built with Firebase Auth and G
 - **Branch per task**: before starting any modification, create a git branch named after the task (e.g. `feature/user-profile`, `fix/background-audio`). Work on that branch and merge to `main` when done.
 
 ## Roadmap
+
+### Note — live radio removed (2026-11-23)
+
+SR API terms require written approval for linear channels, so `HomeViewModel`, `AudioPlayer`, the radio Home tab and the channel/now-playing API calls were removed. The app now has Poddar, Favoriter and Profil tabs. Entries below that mention channels, `AudioPlayer`, `HomeViewModel` or the Home tab describe features that no longer exist. The widget still shows P1 schedule info.
 
 ### Pending
 

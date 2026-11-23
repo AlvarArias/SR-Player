@@ -8,42 +8,6 @@
 import Foundation
 
 
-// MARK: - Channels response
-
-struct SRChannelsResponse: Decodable {
-    let channels: [SRChannel]
-}
-
-struct SRChannel: Decodable, Identifiable {
-    let id: Int
-    let name: String
-    let tagline: String
-    let color: String
-    let image: String?
-    let liveaudio: LiveAudio?
-
-    struct LiveAudio: Decodable {
-        let id: Int
-        let url: String
-    }
-}
-
-
-// MARK: - Schedule response
-
-struct SRScheduleResponse: Decodable {
-    let schedule: [SRScheduleEpisode]
-}
-
-struct SRScheduleEpisode: Decodable {
-    let title: String
-    let description: String?
-    let starttimeutc: MicrosoftDate
-    let endtimeutc: MicrosoftDate
-    let imageurl: String?
-}
-
-
 // MARK: - Programs response
 
 struct SRProgramsResponse: Decodable {
@@ -89,27 +53,6 @@ struct SRPodFile: Codable, Identifiable {
         let min = d / 60
         return min >= 60 ? "\(min / 60) h \(min % 60) min" : "\(min) min"
     }
-}
-
-
-// MARK: - Playlist (now playing music)
-
-struct SRPlaylistResponse: Decodable {
-    let playlist: SRPlaylist
-}
-
-struct SRPlaylist: Decodable {
-    let song: SRSong?
-    let previoussong: SRSong?
-}
-
-struct SRSong: Decodable {
-    let title: String
-    let artist: String
-    let albumname: String?
-    let recordlabel: String?
-    let starttimeutc: MicrosoftDate
-    let stoptimeutc: MicrosoftDate
 }
 
 

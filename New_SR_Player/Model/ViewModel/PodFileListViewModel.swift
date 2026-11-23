@@ -42,12 +42,19 @@ final class PodFileListViewModel: ObservableObject {
             playingID = nil
             Analytics.logPodcastPlay(episodeID: podFile.id, episodeTitle: podFile.title, action: "pause")
         } else {
+            configureSession()
             player?.pause()
             player = AVPlayer(url: url)
             player?.play()
             playingID = podFile.id
             Analytics.logPodcastPlay(episodeID: podFile.id, episodeTitle: podFile.title, action: "play")
         }
+    }
+
+    private func configureSession() {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .spokenAudio)
+        try? session.setActive(true)
     }
 
     func stop() {
