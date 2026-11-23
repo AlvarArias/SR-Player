@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "swiftui-animation": {
+      "source": "dpearson2699/swift-ios-skills",
+      "sourceType": "github",
+      "skillPath": "skills/swiftui-animation/SKILL.md",
+      "computedHash": "447ad41e2f5cd49e3a3c590628601154f95c7896f31a54c7cb33a4f64f952aeb"
+    },
+    "swiftui-expert-skill": {
+      "source": "avdlee/swiftui-agent-skill",
+      "sourceType": "github",
+      "skillPath": "swiftui-expert-skill/SKILL.md",
+      "computedHash": "1f56a9a166a86c3622b695929cdbfe614f1e1ec998a97df068e102c7aff52224"
+    }
+  }
+}

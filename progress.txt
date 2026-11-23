@@ -1,0 +1,72 @@
+# Progress — New_SR_Player
+Updated: 2026-05-21
+
+## Done
+- [x] Firebase Auth email sign-in
+- [x] Google Sign-In button (URL handling)
+- [x] UserAuth observable auth state injected via @EnvironmentObject
+- [x] Lottie splash animation (SplashPage)
+- [x] Color palette (Colors.swift)
+- [x] .gitignore configured (blocks GoogleService-Info.plist, xcuserdata, etc.)
+- [x] AuthProtocol + MockAuth dependency injection — live in LoginModel.swift
+- [x] Unit tests for LoginModel using MockAuth — all 3 tests pass
+- [x] Fixed test target build — removed 30 unnecessary packageProductDependencies from project.pbxproj
+- [x] HomeView — channel list UI with FeaturedCard, ChannelRow, TabView (branch: HomeView)
+- [x] SR API integration — SRModels.swift, SRAPIClient.swift, AudioPlayer.swift
+- [x] HomeViewModel — connected to real SR API; AVPlayer live audio streaming; background audio mode
+- [x] HomeViewModel tests — SRAPIClientProtocol + AudioPlayerProtocol DI; MockSRAPIClient + MockAudioPlayer; 9 tests all pass
+- [x] Google Sign-In flow — LoginModel.signInWithGoogle() using GIDSignIn v7 API; GoogleSignInButton wired via Coordinator+addTarget
+- [x] Split LoginModel.swift — UserAuth.swift, GoogleSignInButton.swift, LoginModel.swift
+- [x] SplashPage re-enabled as app entry point — Headphone.gif via GIFView (ImageIO), 3.5s delay → ContentView
+- [x] GoogleService-Info.plist added to project (not committed — in .gitignore)
+- [x] Google Sign-In sets isSignedIn = true — restorePreviousSignIn restores session on relaunch
+- [x] Launch screen — LaunchScreen.storyboard; fondo azul oscuro (#0d1e2e); logo centrado 200×200pt
+- [x] Pulsing ring buffering animation — PulsingRing ViewModifier; AudioPlayer KVO on timeControlStatus; aplicado en FeaturedCard y ChannelRow
+- [x] Podcast tab ("Poddar") — SRProgram + SRPodFile models; fetchPrograms() + fetchPodFiles(); PodcastViewModel + PodFileListViewModel; PodcastTab + PodFileListView; 5 unit tests, all pass
+- [x] Favorites tab ("Favoriter") — FavoritesStore (UserDefaults persistence via JSONEncoder/JSONDecoder); heart button en episodios; FavoritesView con playback; SRPodFile + MicrosoftDate Codable; 6 unit tests, all pass
+- [x] Podcast carousel — PodcastCarousel (TabView .page style, swipe izquierda/derecha); PodcastCarouselCard (imagen de fondo + gradiente + texto superpuesto); 5 programas aleatorios en PodcastViewModel.featured; PodcastTab refactorizado a ScrollView + LazyVStack; 5 unit tests, all pass
+- [x] Launch screen color — fondo cambiado a teal (#33A6B3) para coincidir con el color de fondo del ícono de la app
+- [x] Banner de notificación — BannerStore (ObservableObject, auto-dismiss 3s); BannerView + BannerModifier; aplicado en ContentView via .bannerOverlay(); reutilizable en cualquier view via @EnvironmentObject; 5 unit tests, all pass
+- [x] Banner conectado a errores reales — var banner: BannerStore? en HomeViewModel, PodcastViewModel y PodFileListViewModel; show() en cada catch; vistas pasan banner via .task; 3 nuevos tests (uno por ViewModel), total 36 tests, all pass
+- [x] Refactor ViewModels — HomeViewModel, PodcastViewModel, PodFileListViewModel movidos a Model/ViewModel/; los archivos de View solo contienen UI
+
+## Animaciones
+- [x] Transiciones entre tabs — easeInOut(0.22s) + symbolEffect bounce en tab bar
+- [x] Cards del carousel — fade+drift (20pt hacia arriba) al cargar datos
+- [x] Botones play/pause — symbolEffect(.replace) en cambio de ícono + PlayPulseButtonStyle (scale 0.82 al presionar)
+- [x] SplashPage → HomeView — fade-out splash + fade-in+scale(0.96) ContentView en 0.5s easeInOut
+- [x] Filas de la lista — aparecen escalonadas con spring delay de 70ms por fila (HomeTab y PodcastTab)
+
+## Analytics (branch: analytics)
+- [x] Google Analytics vinculado al proyecto Firebase; FirebaseAnalytics añadido al target
+- [x] Analytics+Events.swift — extensión tipada con logRadioPlay, logPodcastPlay, logFavoriteToggle, logLogin
+- [x] radio_channel_play — loga play/pause de canal con channel_id, channel_name, action (HomeViewModel)
+- [x] podcast_episode_play — loga play/pause de episodio con episode_id, episode_title, action (PodFileListViewModel)
+- [x] favorite_toggle — loga add/remove de favorito con episode_id, episode_title, action (FavoritesStore)
+- [x] login — evento estándar Firebase con method: email | google | anonymous (LoginModel)
+
+## Widget (branch: widget)
+- [x] SRWidget extension — target separado (WidgetKit); systemSmall mostrando P1
+- [x] SRWidgetProvider — TimelineProvider; fetches paralelos: color del canal + schedule + imagen del programa; refresco cada 30 min; fallback a placeholder si falla la red
+- [x] SRWidgetEntryView — imagen del programa como fondo completo con gradiente negro; nombre del canal arriba; título y horario abajo; .widgetURL abre la app al tocar
+- [x] Coordinación reproductores — togglePlay() detiene vaderPlayer antes de cambiar canal; toggleVader() llama audioPlayer.stop() antes de iniciar Väder
+
+## Natural Language (branch: ai-models)
+- [x] ProgramSearchService — NLTokenizer con .swedish; búsqueda diacritic-insensitive en nombre + descripción; .searchable() en PodcastTab
+- [x] Filtro por categoría — SRProgramCategory decodificado desde API SR (programcategory); chips horizontales en PodcastTab; solo muestra categorías con programas cargados; combinable con búsqueda
+- [x] Badge de idioma — NLLanguageRecognizer detecta programas no suecos (confianza ≥ 0.70); muestra nombre del idioma en sueco ("Finska", "Arabiska", etc.) como cápsula azul en PodcastRow; resultados cacheados en languageCache tras load()
+
+## Now Playing Music (branch: feature/now-playing-music)
+- [x] SRSong model — SRPlaylistResponse + SRPlaylist + SRSong decodables; campos: title, artist, albumname, recordlabel, starttimeutc, stoptimeutc
+- [x] fetchNowPlayingSong(channelID:) — endpoint /playlists/rightnow; devuelve SRSong? (nil si el canal no está tocando música)
+- [x] HomeViewModel.nowPlayingSong — diccionario [Int: SRSong] @Published; se rellena en load() junto con schedule; currentSong(for:) como helper
+- [x] FeaturedCard — muestra "♪ Artist — Título" en blanco cuando hay canción activa; fallback a descripción del episodio
+- [x] ChannelRow — muestra "♪ Artist — Título" en color del canal como línea extra bajo el tagline
+
+## Pending
+- [ ] Review unused SPM transitive dependencies in Package.resolved (deferred)
+- [ ] Sound Analysis — SNAudioStreamAnalyzer como fallback cuando /playlists/rightnow no devuelve canción
+- [x] Sonido en background — MPNowPlayingInfoCenter + MPRemoteCommandCenter en AudioPlayer; verificado en dispositivo real
+- [x] Página de usuario ("Profil") — avatar (foto Google o iniciales), nombre, email, contador de favoritos, botón de cerrar sesión; signOut() en UserAuth
+- [x] Login anónimo — "Fortsätt som gäst" en LoginView; signInAnonymously() en LoginModel; ProfileView muestra "Gäst" para usuarios anónimos
+- [x] Animación equalizer — barras pequeñas animadas que aparecen cuando hay audio reproduciéndose

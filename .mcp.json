@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "xcodemcp": {
+      "command": "npx",
+      "args": ["-y", "xcodemcp@latest"],
+      "env": {
+        "XCODE_MCP_PREFERRED_SCHEME": "New_SR_Player",
+        "XCODE_MCP_PREFERRED_XCODEPROJ": "New_SR_Player.xcodeproj"
+      }
+    }
+  }
+}

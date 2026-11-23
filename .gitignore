@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcarchive
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Xcode workspace machine-specific checks
+**/xcshareddata/IDEWorkspaceChecks.plist
+
+# Firebase / Google — never commit these; add them locally
+GoogleService-Info.plist
+
+# CocoaPods (not used, but just in case)
+Pods/
+Podfile.lock
+
+# Secrets and credentials — never commit
+.env
+.env.*
+!.env.example
+GoogleService-Info*.plist
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+.netrc
+
+# Claude Code — personal/local settings
+.claude/settings.local.json
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+.DS_Store
