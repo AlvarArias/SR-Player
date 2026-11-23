@@ -70,3 +70,7 @@ Updated: 2026-05-21
 - [x] Página de usuario ("Profil") — avatar (foto Google o iniciales), nombre, email, contador de favoritos, botón de cerrar sesión; signOut() en UserAuth
 - [x] Login anónimo — "Fortsätt som gäst" en LoginView; signInAnonymously() en LoginModel; ProfileView muestra "Gäst" para usuarios anónimos
 - [x] Animación equalizer — barras pequeñas animadas que aparecen cuando hay audio reproduciéndose
+
+## Update 2026-11-23
+- Removed live radio streaming (HomeViewModel, AudioPlayer, Home tab) to comply with SR API terms; podcasts, favorites and profile remain.
+- Added "Innehåll från Sveriges Radio" attribution (Poddar and Profil).

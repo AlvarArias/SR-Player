@@ -9,14 +9,35 @@ import XCTest
 @testable import New_SR_Player
 
 
+// MARK: - MockSRAPIClient
+
+final class MockSRAPIClient: SRAPIClientProtocol, @unchecked Sendable {
+    var programsToReturn: [SRProgram] = []
+    var podFilesToReturn: [SRPodFile] = []
+    var shouldThrow = false
+
+    func fetchPrograms() async throws -> [SRProgram] {
+        if shouldThrow { throw MockAPIError.network }
+        return programsToReturn
+    }
+
+    func fetchPodFiles(programID: Int) async throws -> [SRPodFile] {
+        if shouldThrow { throw MockAPIError.network }
+        return podFilesToReturn
+    }
+
+    enum MockAPIError: Error { case network }
+}
+
+
 @MainActor
 final class PodcastViewModelTests: XCTestCase {
 
     var vm: PodcastViewModel!
     var mockClient: MockSRAPIClient!
 
-    let prog1 = SRProgram(id: 4923, name: "Ekot", description: "Nyheter", programimage: nil, channel: nil)
-    let prog2 = SRProgram(id: 2071, name: "Sommar i P1", description: "Sommarprogram", programimage: nil, channel: nil)
+    let prog1 = SRProgram(id: 4923, name: "Ekot", description: "Nyheter", programimage: nil, programcategory: nil, channel: nil)
+    let prog2 = SRProgram(id: 2071, name: "Sommar i P1", description: "Sommarprogram", programimage: nil, programcategory: nil, channel: nil)
 
     override func setUp() {
         super.setUp()
@@ -68,7 +89,7 @@ final class PodcastViewModelTests: XCTestCase {
 
     func testFeatured_hasAtMostFivePrograms() async {
         mockClient.programsToReturn = (1...10).map {
-            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, channel: nil)
+            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, programcategory: nil, channel: nil)
         }
         await vm.load()
         XCTAssertLessThanOrEqual(vm.featured.count, 5)
@@ -76,7 +97,7 @@ final class PodcastViewModelTests: XCTestCase {
 
     func testFeatured_hasFivePrograms_whenEnoughExist() async {
         mockClient.programsToReturn = (1...10).map {
-            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, channel: nil)
+            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, programcategory: nil, channel: nil)
         }
         await vm.load()
         XCTAssertEqual(vm.featured.count, 5)
@@ -84,7 +105,7 @@ final class PodcastViewModelTests: XCTestCase {
 
     func testFeatured_isSubsetOfPrograms() async {
         mockClient.programsToReturn = (1...8).map {
-            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, channel: nil)
+            SRProgram(id: $0, name: "Prog \($0)", description: nil, programimage: nil, programcategory: nil, channel: nil)
         }
         await vm.load()
         let programIDs = Set(vm.programs.map(\.id))

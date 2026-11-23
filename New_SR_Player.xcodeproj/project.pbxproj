@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1A9BECC913B84778BEB5145F /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3869A72D8BA4C4D84EE7FDE /* GoogleSignInButton.swift */; };
-		221CDA00BE894A178AAC16B606E5B9EE /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B043C7B31744889D8C63297B44E98C /* AudioPlayer.swift */; };
 		255917D64916455B833B15152AD1E66F /* SRModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3677442028A749C1A04C457BC8319755 /* SRModels.swift */; };
 		6233434A2FACCFDE0030DF28 /* Headphone.gif in Resources */ = {isa = PBXBuildFile; fileRef = 623343492FACCFDE0030DF28 /* Headphone.gif */; };
 		6233434C2FACDA470030DF28 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6233434B2FACDA470030DF28 /* LaunchScreen.storyboard */; };
@@ -28,7 +27,6 @@
 		62A2207C2BCFD65500623007 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 62A2207B2BCFD65500623007 /* FirebaseAuth */; };
 		62B77C9C2FAA0A7D0073CD4C /* progress.txt in Resources */ = {isa = PBXBuildFile; fileRef = 62B77C9B2FAA0A7D0073CD4C /* progress.txt */; };
 		62B77C9E2FAA0A8E0073CD4C /* CLAUDE.md in Resources */ = {isa = PBXBuildFile; fileRef = 62B77C9D2FAA0A8E0073CD4C /* CLAUDE.md */; };
-		62BC83AB2FB20A8A003612DB /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BC83AA2FB20A8A003612DB /* HomeViewModel.swift */; };
 		62BC83AD2FB20AA9003612DB /* PodcastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BC83AC2FB20AA9003612DB /* PodcastViewModel.swift */; };
 		62BC83AF2FB20ACC003612DB /* PodFileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BC83AE2FB20ACC003612DB /* PodFileListViewModel.swift */; };
 		62BD62AB2FB31B18000BA1D6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD62AA2FB31B18000BA1D6 /* ProfileView.swift */; };
@@ -55,7 +53,6 @@
 		C1D2E3F4A5B60001CC000001 /* BannerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F4A5B60001CC000002 /* BannerStore.swift */; };
 		D1CC8CD15FAA464BBE00E556 /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709A5FB15DE417DB95146CB /* PodcastView.swift */; };
 		D2E3F4A5B6C70001DD000001 /* BannerStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C70001DD000002 /* BannerStoreTests.swift */; };
-		F1A2B3C52FAA0BCD0073CD4C /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C42FAA0BCD0073CD4C /* HomeViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,7 +89,6 @@
 /* Begin PBXFileReference section */
 		3677442028A749C1A04C457BC8319755 /* SRModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRModels.swift; sourceTree = "<group>"; };
 		51C3E94CD6754944A42EC9D6 /* UserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuth.swift; sourceTree = "<group>"; };
-		55B043C7B31744889D8C63297B44E98C /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		623343492FACCFDE0030DF28 /* Headphone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Headphone.gif; sourceTree = "<group>"; };
 		6233434B2FACDA470030DF28 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6233434D2FACDB020030DF28 /* New-SR-PlayerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "New-SR-PlayerTests-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -111,7 +107,6 @@
 		62A220712BCFBDC400623007 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		62B77C9B2FAA0A7D0073CD4C /* progress.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.txt; sourceTree = "<group>"; };
 		62B77C9D2FAA0A8E0073CD4C /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
-		62BC83AA2FB20A8A003612DB /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		62BC83AC2FB20AA9003612DB /* PodcastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastViewModel.swift; sourceTree = "<group>"; };
 		62BC83AE2FB20ACC003612DB /* PodFileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodFileListViewModel.swift; sourceTree = "<group>"; };
 		62BD62AA2FB31B18000BA1D6 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -137,7 +132,6 @@
 		C1D2E3F4A5B60001CC000002 /* BannerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerStore.swift; sourceTree = "<group>"; };
 		D2E3F4A5B6C70001DD000002 /* BannerStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerStoreTests.swift; sourceTree = "<group>"; };
 		D3869A72D8BA4C4D84EE7FDE /* GoogleSignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
-		F1A2B3C42FAA0BCD0073CD4C /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		F709A5FB15DE417DB95146CB /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -292,7 +286,6 @@
 				6233434D2FACDB020030DF28 /* New-SR-PlayerTests-Info.plist */,
 				6274FDDA2BD2474300AD0A8F /* New_SR_PlayerTests.swift */,
 				627401832BD2836C006AFAB7 /* Test_App.swift */,
-				F1A2B3C42FAA0BCD0073CD4C /* HomeViewModelTests.swift */,
 			);
 			path = New_SR_PlayerTests;
 			sourceTree = "<group>";
@@ -300,7 +293,6 @@
 		62BC83A92FB20A53003612DB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				62BC83AA2FB20A8A003612DB /* HomeViewModel.swift */,
 				62BC83AC2FB20AA9003612DB /* PodcastViewModel.swift */,
 				62BC83AE2FB20ACC003612DB /* PodFileListViewModel.swift */,
 			);
@@ -358,7 +350,6 @@
 			children = (
 				3677442028A749C1A04C457BC8319755 /* SRModels.swift */,
 				63FADD4CAE2A4F14A25A29ACD1171453 /* SRAPIClient.swift */,
-				55B043C7B31744889D8C63297B44E98C /* AudioPlayer.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -522,7 +513,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62BC83AB2FB20A8A003612DB /* HomeViewModel.swift in Sources */,
 				62CAB8812BD1678900DDE920 /* AppDelegate.swift in Sources */,
 				62490FC82B2CB43500AD81F0 /* ContentView.swift in Sources */,
 				62A220722BCFBDC400623007 /* LoginView.swift in Sources */,
@@ -533,7 +523,6 @@
 				1A9BECC913B84778BEB5145F /* GoogleSignInButton.swift in Sources */,
 				255917D64916455B833B15152AD1E66F /* SRModels.swift in Sources */,
 				8BFF64115291454EAE04BF7D1B7DA583 /* SRAPIClient.swift in Sources */,
-				221CDA00BE894A178AAC16B606E5B9EE /* AudioPlayer.swift in Sources */,
 				6269ACA12FBF1A6B004C286B /* ProgramSearchService.swift in Sources */,
 				62F2DAEC2BBE8DA8007F59AD /* SplashPage.swift in Sources */,
 				62F2DAF32BBE91E5007F59AD /* LottieStruc.swift in Sources */,
@@ -555,7 +544,6 @@
 			files = (
 				6274FDDB2BD2474300AD0A8F /* New_SR_PlayerTests.swift in Sources */,
 				627401842BD2836C006AFAB7 /* Test_App.swift in Sources */,
-				F1A2B3C52FAA0BCD0073CD4C /* HomeViewModelTests.swift in Sources */,
 				6285B3152FAE6B1C009B722A /* PodcastViewModelTests.swift in Sources */,
 				B2C3D4E5F6A70001BB000001 /* FavoritesStoreTests.swift in Sources */,
 				D2E3F4A5B6C70001DD000001 /* BannerStoreTests.swift in Sources */,

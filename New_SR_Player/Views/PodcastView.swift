@@ -297,6 +297,12 @@ struct PodcastTab: View {
                             Text(vm.filtered.count == vm.programs.count ? "Alla poddar" : "\(vm.filtered.count) program")
                                 .font(.title3).bold()
                                 .padding(.horizontal)
+
+                            Text("Innehåll från Sveriges Radio")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal)
+                                .padding(.bottom, 4)
                                 .padding(.vertical, 10)
 
                             if vm.filtered.isEmpty {

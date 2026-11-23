@@ -9,14 +9,6 @@ import FirebaseAnalytics
 
 
 extension Analytics {
-    static func logRadioPlay(channelID: Int, channelName: String, action: String) {
-        logEvent("radio_channel_play", parameters: [
-            "channel_id": channelID,
-            "channel_name": channelName,
-            "action": action
-        ])
-    }
-
     static func logPodcastPlay(episodeID: Int, episodeTitle: String, action: String) {
         logEvent("podcast_episode_play", parameters: [
             "episode_id": episodeID,

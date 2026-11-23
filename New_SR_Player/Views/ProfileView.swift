@@ -68,6 +68,12 @@ struct ProfileView: View {
                     }
                 }
 
+                Section("Om") {
+                    Text("Innehåll från Sveriges Radio. Appen är inte officiell och har ingen koppling till Sveriges Radio.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
                 Section {
                     Button(role: .destructive) {
                         userAuth.signOut()
