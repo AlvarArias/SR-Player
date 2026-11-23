@@ -88,3 +88,7 @@ To run the tests, use the `New_SR_Player` scheme and press ⌘U, or run `xcodebu
 - The Firebase config file and other secrets are excluded through `.gitignore`.
 - `LaunchScreen.storyboard` and the splash animation are part of the app entry flow (`SplashPage` → `ContentView`).
 - The widget and the app are separate targets; the widget fetches its own data from the SR API.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
