@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Pre-commit secret guard. Uses gitleaks if installed, else a built-in regex fallback.
+# Enable once per clone:  git config core.hooksPath .githooks
+set -euo pipefail
+
+# 1) Block files that must never be committed, regardless of content.
+blocked='(^|/)(GoogleService-Info[^/]*\.plist|google-services\.json|\.env(\..*)?|.*\.(p8|p12|pem|key|keystore|mobileprovision)|Secrets\.xcconfig|settings\.local\.json)$'
+bad=$(git diff --cached --name-only --diff-filter=ACM | grep -E "$blocked" | grep -vE '\.env\.example$' || true)
+if [ -n "$bad" ]; then
+  echo "❌ Commit bloqueado: archivos sensibles en el stage:" >&2
+  echo "$bad" >&2
+  exit 1
+fi
+
+# 2) Content scan.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --config .gitleaks.toml --verbose
+else
+  pattern='AIza[0-9A-Za-z_-]{35}|sk-(ant-)?[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|(api[_-]?key|secret|token)[[:space:]]*[=:][[:space:]]*"[A-Za-z0-9_\-]{16,}"'
+  if git diff --cached -U0 | grep -E '^\+' | grep -vE '^\+\+\+' | grep -iE "$pattern" >/dev/null; then
+    echo "❌ Commit bloqueado: posible secreto en el diff (fallback regex)." >&2
+    echo "   Instala gitleaks (brew install gitleaks) para un escaneo más preciso." >&2
+    exit 1
+  fi
+  echo "⚠️  gitleaks no instalado: se usó el escaneo regex básico." >&2
+fi

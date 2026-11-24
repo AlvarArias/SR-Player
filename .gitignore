@@ -47,3 +47,22 @@ GoogleService-Info*.plist
 xcuserdata/
 *.xcuserstate
 .DS_Store
+
+# --- Hardening additions ---
+# More secret/credential formats
+google-services.json
+*.key
+*.keystore
+*.cer
+credentials*.json
+service-account*.json
+Secrets.xcconfig
+**/Secrets.xcconfig
+.mcp.local.json
+
+# Build / tooling noise
+*.xcresult
+*.log
+.idea/
+.vscode/
+.swiftlint.cache
