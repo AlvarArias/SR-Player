@@ -1,0 +1,10 @@
+title = "SR-Player gitleaks config"
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public identifiers that are designed to ship inside the app binary"
+regexes = [
+  # Google OAuth iOS client ID (public by design, not a secret)
+  '''[0-9]{12}-[a-z0-9]{32}\.apps\.googleusercontent\.com''',
+]

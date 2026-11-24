@@ -4,6 +4,16 @@
       "Bash(swift -)",
       "Bash(xcrun simctl *)",
       "Bash(xcodebuild -project \"New_SR_Player.xcodeproj\" -scheme New_SR_Player -sdk iphonesimulator -destination \"generic/platform=iOS Simulator\" build)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/GoogleService-Info*.plist)",
+      "Read(./**/*.p8)",
+      "Read(./**/*.p12)",
+      "Read(./**/*.pem)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
     ]
   }
 }
