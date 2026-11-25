@@ -23,7 +23,7 @@ iOS SwiftUI radio player for Sveriges Radio (SR), built with Firebase Auth and G
 
 ### Pending
 
-- [ ] Remove live radio from the code to match the README and the SR API terms (live channels need SR's written approval): featured live-channel card and `ChannelRow` in `HomeView`, `AudioPlayer` + `AudioPlayerProtocol` (live stream, Control Center), `SRWidget` target, `radio_channel_play` analytics event, related tests; then retake the Home screenshot (`docs/screenshots/02-home.png`)
+- [ ] Home tab is disconnected (tab bar starts at Poddar; `HomeTab`, `HomeViewModel`, `AudioPlayer`, `SRWidget` kept in the code but not shown). Before publishing/distributing, either remove the live-radio code (live channels need SR's written approval, see SR API terms) or rework Home as podcast-only; then retake the screenshots (03–06 still show the old "Hem" tab)
 - [ ] Review unused SPM transitive dependencies in `Package.resolved` (deferred)
 
 ### Done

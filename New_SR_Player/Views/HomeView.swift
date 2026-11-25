@@ -247,6 +247,7 @@ private struct DiscoverPodcastRow: View {
 
 
 // MARK: - HomeTab
+// Not shown for now: the tab bar starts at Poddar. Kept until the Home screen is reworked.
 
 private struct HomeTab: View {
     @StateObject private var vm = HomeViewModel()
@@ -330,11 +331,10 @@ private struct HomeTab: View {
 // MARK: - AppTab
 
 private enum AppTab: Int, CaseIterable {
-    case home, podcasts, favorites, profile
+    case podcasts, favorites, profile
 
     var title: String {
         switch self {
-        case .home:      return "Hem"
         case .podcasts:  return "Poddar"
         case .favorites: return "Favoriter"
         case .profile:   return "Profil"
@@ -343,7 +343,6 @@ private enum AppTab: Int, CaseIterable {
 
     var icon: String {
         switch self {
-        case .home:      return "house.fill"
         case .podcasts:  return "mic"
         case .favorites: return "heart.fill"
         case .profile:   return "person.fill"
@@ -388,14 +387,10 @@ private struct CustomTabBar: View {
 // MARK: - HomeView
 
 struct HomeView: View {
-    @State private var selectedTab: AppTab = .home
+    @State private var selectedTab: AppTab = .podcasts
 
     var body: some View {
         ZStack {
-            HomeTab()
-                .opacity(selectedTab == .home ? 1 : 0)
-                .allowsHitTesting(selectedTab == .home)
-
             PodcastTab()
                 .opacity(selectedTab == .podcasts ? 1 : 0)
                 .allowsHitTesting(selectedTab == .podcasts)
