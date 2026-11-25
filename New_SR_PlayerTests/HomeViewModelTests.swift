@@ -172,7 +172,56 @@ final class HomeViewModelTests: XCTestCase {
     }
 
 
+    // MARK: - Discover podcasts
+
+    func testDiscover_picksExactlyThreeDistinctPrograms() async {
+        mockClient.programsToReturn = (1...20).map { makeProgram(id: $0) }
+        await vm.load()
+        XCTAssertEqual(vm.discoverPrograms.count, 3)
+        XCTAssertEqual(Set(vm.discoverPrograms.map(\.id)).count, 3)
+    }
+
+    func testDiscover_fewerThanThree_showsWhatExists() async {
+        mockClient.programsToReturn = [makeProgram(id: 1), makeProgram(id: 2)]
+        await vm.load()
+        XCTAssertEqual(vm.discoverPrograms.count, 2)
+    }
+
+    func testDiscover_removesDuplicateIDs() async {
+        mockClient.programsToReturn = [makeProgram(id: 1), makeProgram(id: 1), makeProgram(id: 1)]
+        await vm.load()
+        XCTAssertEqual(vm.discoverPrograms.map(\.id), [1])
+    }
+
+    func testDiscover_excludesLiveChannelShows() async {
+        mockClient.programsToReturn = [makeProgram(id: 1, name: "Morgon i P3"), makeProgram(id: 2, name: "Sommar i P1")]
+        await vm.load()
+        XCTAssertEqual(vm.discoverPrograms.map(\.id), [2])
+    }
+
+    func testDiscover_networkError_isEmptyAndFlagged() async {
+        mockClient.shouldThrow = true
+        await vm.load()
+        XCTAssertTrue(vm.discoverPrograms.isEmpty)
+        XCTAssertTrue(vm.discoverFailed)
+    }
+
+    func testDiscover_refreshFailure_keepsPreviousPick() async {
+        mockClient.programsToReturn = (1...10).map { makeProgram(id: $0) }
+        await vm.refreshDiscover()
+        let before = vm.discoverPrograms.map(\.id)
+        mockClient.shouldThrow = true
+        await vm.refreshDiscover()
+        XCTAssertEqual(vm.discoverPrograms.map(\.id), before)
+        XCTAssertFalse(vm.discoverFailed)
+    }
+
+
     // MARK: - Helpers
+
+    private func makeProgram(id: Int, name: String? = nil) -> SRProgram {
+        SRProgram(id: id, name: name ?? "Prog \(id)", description: nil, programimage: nil, programcategory: nil, channel: nil)
+    }
 
     private func makeEpisode(title: String) -> SRScheduleEpisode {
         SRScheduleEpisode(
