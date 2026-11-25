@@ -3,6 +3,23 @@
 A native iOS app for listening to **Sveriges Radio** (Swedish public radio): live channels, podcasts, favorites and a home-screen widget. Built with SwiftUI, Swift 6 and the open SR API, with Firebase authentication and on-device language processing.
 
 > Unofficial project. It uses the public [Sveriges Radio open API](https://api.sr.se/api/v2/docs/) and is not affiliated with Sveriges Radio. The app UI is in Swedish.
+>
+> All audio, images and program information belong to Sveriges Radio and are used under the [terms of use of the Sveriges Radio open API](https://www.sverigesradio.se/artikel/api-villkor) (in Swedish). This repository contains only the app's source code.
+>
+> Playing live channels requires written authorization from Sveriges Radio. This project is an educational demo and is not distributed.
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/01-login.png" width="30%" alt="Sign in with email, Google or as guest" />
+  <img src="docs/screenshots/02-home.png" width="30%" alt="Home: live channel and Discover podcast" />
+  <img src="docs/screenshots/03-podcasts.png" width="30%" alt="Podcasts: carousel, category filters and program list" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/04-episodes.png" width="30%" alt="Episode list with favorite and play buttons" />
+  <img src="docs/screenshots/05-favorites.png" width="30%" alt="Saved favorite episodes" />
+  <img src="docs/screenshots/06-profile.png" width="30%" alt="Profile with saved-episode count and sign out" />
+</p>
 
 ## Features
 
@@ -14,6 +31,7 @@ A native iOS app for listening to **Sveriges Radio** (Swedish public radio): liv
 
 **Podcasts ("Poddar")**
 - Swipeable carousel of featured programs and a full program list
+- "Discover podcast" on the home screen: three random podcasts, renewed on launch and pull-to-refresh, each linking to its episodes
 - Episode lists with playback
 - Swedish-aware search using `NLTokenizer(.swedish)`, diacritic-insensitive
 - Category filter chips built from the API's `programcategory`
@@ -79,7 +97,7 @@ The full component list and flows are documented in [`CLAUDE.md`](CLAUDE.md) and
 5. In `New-SR-Player-Info.plist`, set `GIDClientID` and the URL scheme to the values from your own `GoogleService-Info.plist`.
 6. Select the `New_SR_Player` scheme and run on a simulator or device.
 
-The SR API needs no key.
+The SR API needs no key. Read its [terms of use](https://www.sverigesradio.se/artikel/api-villkor) before building on it.
 
 To run the tests, use the `New_SR_Player` scheme and press ⌘U, or run `xcodebuild test` against an iOS simulator.
 
