@@ -23,6 +23,7 @@ iOS SwiftUI radio player for Sveriges Radio (SR), built with Firebase Auth and G
 
 ### Pending
 
+- [ ] Remove live radio from the code to match the README and the SR API terms (live channels need SR's written approval): featured live-channel card and `ChannelRow` in `HomeView`, `AudioPlayer` + `AudioPlayerProtocol` (live stream, Control Center), `SRWidget` target, `radio_channel_play` analytics event, related tests; then retake the Home screenshot (`docs/screenshots/02-home.png`)
 - [ ] Review unused SPM transitive dependencies in `Package.resolved` (deferred)
 
 ### Done
