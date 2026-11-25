@@ -2,7 +2,7 @@
 
 A native iOS app for listening to **Sveriges Radio** (Swedish public radio): podcasts, favorites and a profile. Built with SwiftUI, Swift 6 and the open SR API, with Firebase authentication and on-device language processing.
 
-> Unofficial project. It uses the public [Sveriges Radio open API](https://api.sr.se/api/v2/docs/) and is not affiliated with Sveriges Radio. The app UI is in Swedish.
+> Unofficial project. It uses the public [Sveriges Radio open API](https://api.sr.se/api/documentation/v2/index.html) and is not affiliated with Sveriges Radio. The app UI is in Swedish.
 >
 > All audio, images and program information belong to Sveriges Radio and are used under the [terms of use of the Sveriges Radio open API](https://www.sverigesradio.se/artikel/api-villkor) (in Swedish). This repository contains only the app's source code.
 >
