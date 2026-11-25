@@ -91,35 +91,6 @@ extension View {
 }
 
 
-// MARK: - EqualizerView
-
-struct EqualizerView: View {
-    let color: Color
-    @State private var animate = false
-
-    var body: some View {
-        HStack(alignment: .bottom, spacing: 2) {
-            bar(maxHeight: 10, duration: 0.5)
-            bar(maxHeight: 14, duration: 0.4)
-            bar(maxHeight:  8, duration: 0.6)
-        }
-        .frame(height: 14)
-        .onAppear { withAnimation { animate = true } }
-        .onDisappear { animate = false }
-    }
-
-    private func bar(maxHeight: CGFloat, duration: Double) -> some View {
-        RoundedRectangle(cornerRadius: 2)
-            .fill(color)
-            .frame(width: 3, height: animate ? maxHeight : 3)
-            .animation(
-                .easeInOut(duration: duration).repeatForever(autoreverses: true),
-                value: animate
-            )
-    }
-}
-
-
 // MARK: - PlayPulseButtonStyle
 
 struct PlayPulseButtonStyle: ButtonStyle {

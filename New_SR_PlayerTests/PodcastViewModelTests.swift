@@ -9,6 +9,27 @@ import XCTest
 @testable import New_SR_Player
 
 
+// MARK: - MockSRAPIClient
+
+final class MockSRAPIClient: SRAPIClientProtocol, @unchecked Sendable {
+    var programsToReturn: [SRProgram] = []
+    var podFilesToReturn: [SRPodFile] = []
+    var shouldThrow = false
+
+    func fetchPrograms() async throws -> [SRProgram] {
+        if shouldThrow { throw MockAPIError.network }
+        return programsToReturn
+    }
+
+    func fetchPodFiles(programID: Int) async throws -> [SRPodFile] {
+        if shouldThrow { throw MockAPIError.network }
+        return podFilesToReturn
+    }
+
+    enum MockAPIError: Error { case network }
+}
+
+
 @MainActor
 final class PodcastViewModelTests: XCTestCase {
 
