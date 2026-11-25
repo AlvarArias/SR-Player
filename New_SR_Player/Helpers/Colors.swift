@@ -27,20 +27,3 @@ extension Color {
         )
     }
 }
-
-
-// MARK: - SRChannel UI extensions
-
-extension SRChannel {
-    var swiftColor: Color { Color(hex: color) }
-    var sfSymbol: String {
-        switch id {
-        case 132:  return "newspaper"
-        case 163:  return "guitars"
-        case 164:  return "music.note"
-        case 4951: return "music.quarternote.3"
-        default:   return "radio"
-        }
-    }
-}
-
