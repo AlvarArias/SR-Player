@@ -12,7 +12,6 @@ A native iOS app for listening to **Sveriges Radio** (Swedish public radio): pod
 
 <p align="center">
   <img src="docs/screenshots/01-login.png" width="30%" alt="Sign in with email, Google or as guest" />
-  <img src="docs/screenshots/02-home.png" width="30%" alt="Home with Discover podcast" />
   <img src="docs/screenshots/03-podcasts.png" width="30%" alt="Podcasts: carousel, category filters and program list" />
 </p>
 <p align="center">
@@ -25,7 +24,6 @@ A native iOS app for listening to **Sveriges Radio** (Swedish public radio): pod
 
 **Podcasts ("Poddar")**
 - Swipeable carousel of featured programs and a full program list
-- "Discover podcast" on the home screen: three random podcasts, renewed on launch and pull-to-refresh, each linking to its episodes
 - Episode lists with playback and a pulsing ring on the active episode
 - Swedish-aware search using `NLTokenizer(.swedish)`, diacritic-insensitive
 - Category filter chips built from the API's `programcategory`
