@@ -91,4 +91,4 @@ To run the tests, use the `New_SR_Player` scheme and press ⌘U, or run `xcodebu
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
