@@ -206,67 +206,42 @@ struct ChannelRow: View {
 }
 
 
-// MARK: - VäderRow
+// MARK: - DiscoverPodcastRow
 
-private struct VäderRow: View {
-    let episode: SRPodFile
-    let isPlaying: Bool
-    let onPlay: () -> Void
-
-    private static let inputFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "yyyyMMdd HH:mm"
-        f.locale = Locale(identifier: "sv_SE")
-        return f
-    }()
-
-    private static let outputFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "d MMM · HH:mm"
-        f.locale = Locale(identifier: "sv_SE")
-        return f
-    }()
-
-    private var parsedTitle: String {
-        episode.title.replacing(/\s*\d{8}\s+\d{2}:\d{2}.*/, with: "")
-    }
-
-    private var parsedDate: String? {
-        guard let match = episode.title.firstMatch(of: /(\d{8}) (\d{2}:\d{2})/) else { return nil }
-        let raw = "\(match.1) \(match.2)"
-        guard let date = Self.inputFormatter.date(from: raw) else { return nil }
-        return Self.outputFormatter.string(from: date)
-    }
+private struct DiscoverPodcastRow: View {
+    let program: SRProgram
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: "cloud.sun.fill")
-                .font(.title2)
-                .foregroundColor(.blue)
-                .frame(width: 56, height: 56)
-                .background(Color.blue.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            AsyncImage(url: URL(string: program.programimage ?? "")) { image in
+                image.resizable().scaledToFill()
+            } placeholder: {
+                Color.gray.opacity(0.15)
+                    .overlay(Image(systemName: "mic").foregroundColor(.secondary))
+            }
+            .frame(width: 56, height: 56)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(parsedTitle)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(program.name)
                     .font(.headline)
-                if let date = parsedDate {
-                    Text(date)
+                    .lineLimit(1)
+                if let description = program.description, !description.isEmpty {
+                    Text(description)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .lineLimit(2)
                 }
             }
 
             Spacer()
 
-            Button(action: onPlay) {
-                Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                    .font(.title)
-                    .foregroundColor(isPlaying ? .blue : .gray)
-            }
-            .pulsingRing(isActive: isPlaying, color: .blue)
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(.secondary)
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 }
 
@@ -279,6 +254,17 @@ private struct HomeTab: View {
     @State private var rowsAppeared = false
 
     var body: some View {
+        NavigationStack {
+            content
+                .toolbar(.hidden, for: .navigationBar)
+        }
+        .task { vm.banner = banner; await vm.load() }
+        .onChange(of: vm.isLoading) { _, isLoading in
+            if !isLoading { withAnimation { rowsAppeared = true } }
+        }
+    }
+
+    private var content: some View {
         VStack(spacing: 0) {
             TopBar()
             Divider()
@@ -299,35 +285,30 @@ private struct HomeTab: View {
                             onPlay: { vm.togglePlay(id: featured.id) }
                         )
 
-                        HStack {
-                            Text("Populära kanaler")
-                                .font(.title3).bold()
-                            Spacer()
-                            Button {} label: {
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
+                        Text("Discover podcast")
+                            .font(.title3).bold()
 
                         VStack(spacing: 0) {
-                            ForEach(Array(vm.listed.enumerated()), id: \.element.id) { index, channel in
-                                ChannelRow(
-                                    channel: channel,
-                                    episode: vm.nowPlaying[channel.id],
-                                    tagline: vm.tagline(for: channel),
-                                    song: vm.currentSong(for: channel),
-                                    isPlaying: vm.playingChannelID == channel.id,
-                                    isBuffering: vm.bufferingChannelID == channel.id,
-                                    onPlay: { vm.togglePlay(id: channel.id) }
-                                )
-                                .opacity(rowsAppeared ? 1 : 0)
-                                .offset(y: rowsAppeared ? 0 : 18)
-                                .animation(
-                                    .spring(response: 0.45, dampingFraction: 0.78)
-                                        .delay(Double(index) * 0.07),
-                                    value: rowsAppeared
-                                )
-                                if channel.id != vm.listed.last?.id {
+                            if vm.discoverPrograms.isEmpty {
+                                Text(vm.discoverFailed ? "Kunde inte ladda poddar" : "Inga poddar just nu")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            ForEach(Array(vm.discoverPrograms.enumerated()), id: \.element.id) { index, program in
+                                NavigationLink(destination: PodFileListView(program: program)) {
+                                    DiscoverPodcastRow(program: program)
+                                }
+                                .buttonStyle(.plain)
+                                    .opacity(rowsAppeared ? 1 : 0)
+                                    .offset(y: rowsAppeared ? 0 : 18)
+                                    .animation(
+                                        .spring(response: 0.45, dampingFraction: 0.78)
+                                            .delay(Double(index) * 0.07),
+                                        value: rowsAppeared
+                                    )
+                                if program.id != vm.discoverPrograms.last?.id {
                                     Divider().padding(.vertical, 4)
                                 }
                             }
@@ -335,31 +316,12 @@ private struct HomeTab: View {
                         .padding()
                         .background(Color(white: 1.0))
                         .cornerRadius(16)
-
-                        if let episode = vm.vaderEpisode {
-                            Text("Väder")
-                                .font(.title3).bold()
-
-                            VStack(spacing: 0) {
-                                VäderRow(
-                                    episode: episode,
-                                    isPlaying: vm.vaderIsPlaying,
-                                    onPlay: { vm.toggleVader() }
-                                )
-                            }
-                            .padding()
-                            .background(Color(white: 1.0))
-                            .cornerRadius(16)
-                        }
                     }
                     .padding()
                 }
                 .background(Color(white: 0.95))
+                .refreshable { await vm.refreshDiscover() }
             }
-        }
-        .task { vm.banner = banner; await vm.load() }
-        .onChange(of: vm.isLoading) { _, isLoading in
-            if !isLoading { withAnimation { rowsAppeared = true } }
         }
     }
 }

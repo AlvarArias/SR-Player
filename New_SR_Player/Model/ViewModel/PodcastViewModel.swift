@@ -26,7 +26,7 @@ final class PodcastViewModel: ObservableObject {
         self.apiClient = apiClient
     }
 
-    private static let excludedPrefixes = ["Eftermiddag", "Förmiddag", "Morgon", "Nyheter"]
+    static let excludedPrefixes = ["Eftermiddag", "Förmiddag", "Morgon", "Nyheter"]
 
     var availableCategories: [SRProgramCategory] {
         var seen = Set<Int>()

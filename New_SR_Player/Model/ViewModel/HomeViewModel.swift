@@ -5,7 +5,6 @@
 //  Created by Alvar Arias on 2026-05-11.
 //
 
-import AVFoundation
 import FirebaseAnalytics
 import SwiftUI
 
@@ -18,15 +17,14 @@ final class HomeViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var playingChannelID: Int?
     @Published var bufferingChannelID: Int?
-    @Published var vaderEpisode: SRPodFile?
-    @Published var vaderIsPlaying = false
+    @Published var discoverPrograms: [SRProgram] = []
+    @Published var discoverFailed = false
 
     var banner: BannerStore?
     private let apiClient: any SRAPIClientProtocol
     private let audioPlayer: any AudioPlayerProtocol
-    private var vaderPlayer: AVPlayer?
 
-    private static let vaderProgramID = 2000
+    static let discoverCount = 3
 
     init(
         apiClient: any SRAPIClientProtocol = SRAPIClient(),
@@ -57,19 +55,40 @@ final class HomeViewModel: ObservableObject {
                     nowPlayingSong[channel.id] = song
                 }
             }
-            vaderEpisode = try? await apiClient.fetchPodFiles(programID: Self.vaderProgramID).first
         } catch {
             banner?.show("Ingen anslutning — kontrollera nätverket")
         }
+        await refreshDiscover()
+    }
+
+    /// Fetches podcasts and picks `discoverCount` random ones.
+    /// The pick is stored, so it stays stable across SwiftUI redraws and only
+    /// changes when this is called again (app launch or pull-to-refresh).
+    func refreshDiscover() async {
+        do {
+            let programs = try await apiClient.fetchPrograms()
+            discoverPrograms = Self.pickRandom(from: Self.eligibleForDiscover(programs), count: Self.discoverCount)
+            discoverFailed = false
+        } catch {
+            discoverFailed = discoverPrograms.isEmpty
+        }
+    }
+
+    static func eligibleForDiscover(_ programs: [SRProgram]) -> [SRProgram] {
+        programs.filter { program in
+            !PodcastViewModel.excludedPrefixes.contains(where: { program.name.hasPrefix($0) })
+        }
+    }
+
+    /// Up to `count` distinct programs, in random order.
+    static func pickRandom(from programs: [SRProgram], count: Int) -> [SRProgram] {
+        var seen = Set<Int>()
+        let unique = programs.filter { seen.insert($0.id).inserted }
+        return Array(unique.shuffled().prefix(count))
     }
 
     func togglePlay(id: Int) {
         guard let channel = channels.first(where: { $0.id == id }) else { return }
-        if vaderIsPlaying {
-            vaderPlayer?.pause()
-            vaderPlayer = nil
-            vaderIsPlaying = false
-        }
         audioPlayer.toggle(channel: channel)
         playingChannelID = audioPlayer.playingChannelID
         let action = audioPlayer.playingChannelID == id ? "play" : "pause"
@@ -82,22 +101,5 @@ final class HomeViewModel: ObservableObject {
 
     func currentSong(for channel: SRChannel) -> SRSong? {
         nowPlayingSong[channel.id]
-    }
-
-    func toggleVader() {
-        guard let episode = vaderEpisode,
-              let urlString = episode.url,
-              let url = URL(string: urlString) else { return }
-        if vaderIsPlaying {
-            vaderPlayer?.pause()
-            vaderPlayer = nil
-            vaderIsPlaying = false
-        } else {
-            audioPlayer.stop()
-            playingChannelID = nil
-            vaderPlayer = AVPlayer(url: url)
-            vaderPlayer?.play()
-            vaderIsPlaying = true
-        }
     }
 }
