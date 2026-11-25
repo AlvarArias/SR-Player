@@ -13,11 +13,12 @@ A native iOS app for listening to **Sveriges Radio** (Swedish public radio): pod
 <p align="center">
   <img src="docs/screenshots/01-login.png" width="30%" alt="Sign in with email, Google or as guest" />
   <img src="docs/screenshots/03-podcasts.png" width="30%" alt="Podcasts: carousel, category filters and program list" />
+  <img src="docs/screenshots/04-episodes.png" width="30%" alt="Episode list with favorite and play buttons" />
 </p>
 <p align="center">
-  <img src="docs/screenshots/04-episodes.png" width="30%" alt="Episode list with favorite and play buttons" />
   <img src="docs/screenshots/05-favorites.png" width="30%" alt="Saved favorite episodes" />
   <img src="docs/screenshots/06-profile.png" width="30%" alt="Profile with saved-episode count and sign out" />
+  <img src="docs/screenshots/07-widget.png" width="30%" alt="Poddtips home-screen widget showing a random podcast" />
 </p>
 
 ## Features
@@ -39,13 +40,14 @@ A native iOS app for listening to **Sveriges Radio** (Swedish public radio): pod
 
 **Polish**
 - Firebase Analytics with typed events (`podcast_episode_play`, `favorite_toggle`, `login`)
+- WidgetKit small widget ("Poddtips") showing a random podcast with its image and category, refreshed hourly
 - Reusable error banner, tab and list animations, GIF/Lottie splash screen and launch screen
 
 ## Tech stack
 
 | Area | Technology |
 |---|---|
-| UI | SwiftUI |
+| UI | SwiftUI, WidgetKit |
 | Language | Swift 6, async/await |
 | Audio | AVFoundation |
 | Auth and analytics | Firebase Auth, Firebase Analytics, GoogleSignIn-iOS |
@@ -67,6 +69,7 @@ New_SR_Player/
 │   └── FavoritesStore.swift
 ├── Views/           # SwiftUI views (UI only)
 └── Helpers/         # Colors, animations, banner, search and language detection, analytics
+SRWidget/            # WidgetKit extension ("Poddtips")
 New_SR_PlayerTests/  # Unit tests
 ```
 
