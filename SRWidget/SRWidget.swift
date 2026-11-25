@@ -12,59 +12,34 @@ import SwiftUI
 
 // MARK: - Widget-local models
 
-private struct ChannelDetailResponse: Decodable {
-    let channel: ChannelDetail
-    struct ChannelDetail: Decodable {
-        let color: String
+private struct ProgramsResponse: Decodable {
+    let programs: [Program]
+}
+
+private struct Program: Decodable {
+    let id: Int
+    let name: String
+    let programimage: String?
+    let programcategory: Category?
+
+    struct Category: Decodable {
+        let name: String
     }
-}
-
-private struct MicrosoftDate: Decodable {
-    let date: Date
-    init(from decoder: Decoder) throws {
-        let raw = try decoder.singleValueContainer().decode(String.self)
-        guard
-            let open  = raw.firstIndex(of: "("),
-            let close = raw.firstIndex(of: ")"),
-            let ms    = Double(raw[raw.index(after: open)..<close])
-        else {
-            throw DecodingError.dataCorruptedError(
-                in: try decoder.singleValueContainer(),
-                debugDescription: "Invalid Microsoft date: \(raw)"
-            )
-        }
-        date = Date(timeIntervalSince1970: ms / 1000)
-    }
-}
-
-private struct ScheduleEpisode: Decodable {
-    let title: String
-    let starttimeutc: MicrosoftDate
-    let endtimeutc: MicrosoftDate
-    let imageurl: String?
-}
-
-private struct ScheduleResponse: Decodable {
-    let schedule: [ScheduleEpisode]
 }
 
 
 // MARK: - Entry
 
-struct ChannelEntry: TimelineEntry {
+struct PodcastEntry: TimelineEntry {
     let date: Date
-    let channelName: String
-    let colorHex: String
-    let programTitle: String
-    let timeRange: String
+    let name: String
+    let category: String
     let imageData: Data?
 
-    static let placeholder = ChannelEntry(
+    static let placeholder = PodcastEntry(
         date: .now,
-        channelName: "P1",
-        colorHex: "EED096",
-        programTitle: "Kaliber",
-        timeRange: "10:00 – 11:00",
+        name: "Ekonomiekot",
+        category: "Ekonomi och teknik",
         imageData: nil
     )
 }
@@ -74,65 +49,51 @@ struct ChannelEntry: TimelineEntry {
 
 struct SRWidgetProvider: TimelineProvider {
 
-    private static let channelID   = 132
-    private static let channelName = "P1"
-    private static let base        = "https://api.sr.se/api/v2"
+    private static let url = URL(string: "https://api.sr.se/api/v2/programs/index?format=json&haspod=true&size=100")!
 
-    private static let timeFmt: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "HH:mm"
-        f.locale = Locale(identifier: "sv_SE")
-        return f
-    }()
+    /// Same exclusions as the Poddar tab: shows that belong to live channels.
+    /// Keep in sync with `PodcastViewModel.excludedPrefixes` (the widget is a separate target).
+    private static let excludedPrefixes = ["Eftermiddag", "Förmiddag", "Morgon", "Nyheter"]
 
-    func placeholder(in context: Context) -> ChannelEntry { .placeholder }
+    func placeholder(in context: Context) -> PodcastEntry { .placeholder }
 
-    func getSnapshot(in context: Context, completion: @escaping (ChannelEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping (PodcastEntry) -> Void) {
         if context.isPreview { completion(.placeholder); return }
         Task {
             completion((try? await fetchEntry()) ?? .placeholder)
         }
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<ChannelEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<PodcastEntry>) -> Void) {
         Task {
             let entry = (try? await fetchEntry()) ?? .placeholder
-            let refresh = Calendar.current.date(byAdding: .minute, value: 30, to: .now)!
+            let refresh = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
             completion(Timeline(entries: [entry], policy: .after(refresh)))
         }
     }
 
-    private func fetchEntry() async throws -> ChannelEntry {
-        let channelURL  = URL(string: "\(Self.base)/channels/\(Self.channelID)?format=json")!
-        let scheduleURL = URL(string: "\(Self.base)/scheduledepisodes?channelid=\(Self.channelID)&format=json&size=100")!
+    /// Picks a random podcast with an image, so every refresh shows a different one.
+    private func fetchEntry() async throws -> PodcastEntry {
+        let (data, _) = try await URLSession.shared.data(from: Self.url)
+        let programs = try JSONDecoder().decode(ProgramsResponse.self, from: data).programs
 
-        async let channelFetch  = URLSession.shared.data(from: channelURL)
-        async let scheduleFetch = URLSession.shared.data(from: scheduleURL)
-
-        let (channelData, _)  = try await channelFetch
-        let (scheduleData, _) = try await scheduleFetch
-
-        let colorHex = (try? JSONDecoder().decode(ChannelDetailResponse.self, from: channelData))?.channel.color ?? "EED096"
-
-        let response = try JSONDecoder().decode(ScheduleResponse.self, from: scheduleData)
-        let now = Date()
-        let episode = response.schedule.first(where: { $0.starttimeutc.date <= now && $0.endtimeutc.date >= now })
-            ?? response.schedule.filter { $0.starttimeutc.date <= now }.max(by: { $0.starttimeutc.date < $1.starttimeutc.date })
-
-        guard let ep = episode else {
-            return ChannelEntry(date: now, channelName: Self.channelName, colorHex: colorHex,
-                                programTitle: Self.channelName, timeRange: "", imageData: nil)
+        let eligible = programs.filter { program in
+            program.programimage != nil
+                && !Self.excludedPrefixes.contains(where: { program.name.hasPrefix($0) })
         }
-
-        let range = "\(Self.timeFmt.string(from: ep.starttimeutc.date)) – \(Self.timeFmt.string(from: ep.endtimeutc.date))"
+        guard let program = eligible.randomElement() else { return .placeholder }
 
         var imageData: Data? = nil
-        if let urlString = ep.imageurl, let imageURL = URL(string: urlString) {
+        if let urlString = program.programimage, let imageURL = URL(string: urlString) {
             imageData = try? await URLSession.shared.data(from: imageURL).0
         }
 
-        return ChannelEntry(date: now, channelName: Self.channelName, colorHex: colorHex,
-                            programTitle: ep.title, timeRange: range, imageData: imageData)
+        return PodcastEntry(
+            date: .now,
+            name: program.name,
+            category: program.programcategory?.name ?? "",
+            imageData: imageData
+        )
     }
 }
 
@@ -140,7 +101,7 @@ struct SRWidgetProvider: TimelineProvider {
 // MARK: - View
 
 struct SRWidgetEntryView: View {
-    let entry: ChannelEntry
+    let entry: PodcastEntry
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -154,31 +115,32 @@ struct SRWidgetEntryView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 4) {
-                    Image(systemName: "radio")
+                    Image(systemName: "mic")
                         .font(.caption2)
-                    Text(entry.channelName)
+                    Text("Poddtips")
                         .font(.caption2).bold()
                 }
                 .foregroundStyle(.white.opacity(0.8))
 
                 Spacer()
 
-                Text(entry.programTitle)
+                Text(entry.name)
                     .font(.subheadline).bold()
                     .foregroundStyle(.white)
                     .lineLimit(2)
 
-                if !entry.timeRange.isEmpty {
-                    Text(entry.timeRange)
+                if !entry.category.isEmpty {
+                    Text(entry.category)
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.75))
+                        .lineLimit(1)
                 }
             }
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
         .containerBackground(for: .widget) { backgroundView }
-        .widgetURL(URL(string: "srplayer://channel/132"))
+        .widgetURL(URL(string: "srplayer://podcasts"))
     }
 
     @ViewBuilder
@@ -188,18 +150,8 @@ struct SRWidgetEntryView: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            channelColor
+            Color(red: 0x33 / 255, green: 0xA6 / 255, blue: 0xB3 / 255) // app teal (#33A6B3)
         }
-    }
-
-    private var channelColor: Color {
-        var int: UInt64 = 0
-        Scanner(string: entry.colorHex).scanHexInt64(&int)
-        return Color(
-            red:   Double((int >> 16) & 0xFF) / 255,
-            green: Double((int >> 8)  & 0xFF) / 255,
-            blue:  Double( int        & 0xFF) / 255
-        )
     }
 }
 
@@ -213,8 +165,8 @@ struct SRWidget: Widget {
         StaticConfiguration(kind: kind, provider: SRWidgetProvider()) { entry in
             SRWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("SR P1")
-        .description("Visa aktuellt program på P1.")
+        .configurationDisplayName("Poddtips")
+        .description("Ett slumpmässigt poddtips från Sveriges Radio.")
         .supportedFamilies([.systemSmall])
     }
 }
@@ -223,5 +175,5 @@ struct SRWidget: Widget {
 #Preview(as: .systemSmall) {
     SRWidget()
 } timeline: {
-    ChannelEntry.placeholder
+    PodcastEntry.placeholder
 }
